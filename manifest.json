@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Quick Clippy",
-  "description": "Provides a quck, inndexable clipboard",
+  "name": "QuickClippy",
+  "description": "Provides a quick, searchable, indexed clipboard",
   "version": "1.0",
 
   "browser_action": {
