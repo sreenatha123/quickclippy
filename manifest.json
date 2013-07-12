@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+
+  "name": "Quick Clippy",
+  "description": "Provides a quck, inndexable clipboard",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "redSkull.png",
+    "default_popup": "popup.html"
+  }
+}

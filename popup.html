@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <title>QuickClippy popup</title>
+    <style>
+      body {
+        min-width: 300px;
+        overflow-x: hidden;
+      }
+    </style>
+    <!-- <script src="popup.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+    </script>
+    <script>
+      function viewAll() {
+        //jQuery.get('./data.txt', function(data) {
+       	//  document.getElementById("getValue").value=data;
+        //});
+       	  var gValue = document.getElementById("getValue");
+	  gValue.value="Content";
+      }
+      function getValue() {
+        jQuery.get('./data.txt', function(data) {
+       	  alert(data);
+        });
+      }
+    </script>
+  </head>
+  <body>
+  <form>
+    <table>
+      <tr>
+        <td>Key</td>
+        <td><input type="text" name="getKey" value="Insert key here"></td>
+      </tr>
+      <tr>
+        <td>Value</td>
+        <td> <textarea name="getValue" rows=3></textarea></td>
+      </tr>
+    </table>
+  </form>
+  <button onclick="getValue()">
+    Get Value
+  </button>
+  <br/>
+  <br/>
+  <form>
+    <table>
+      <tr>
+        <td>Key</td>
+        <td><input type="text" name="setKey" value="Insert key here"></td>
+      </tr>
+      <tr>
+        <td>Value</td>
+        <td> <textarea name="setValue" rows=3 class="required">Insert value here</textarea></td>
+      </tr>
+    </table>
+  </form>
+  <button onclick="setValue()">
+    Set Value
+  </button>
+  <br/>
+  <button onclick="viewAll()">
+    View All
+  </button>
+  </body>
+</html>
+

@@ -1,0 +1,6 @@
+{
+  "google": "www.google.com",
+  "quote1": "At any point of time in our lives, we are capable of achieving what we want",
+  "id": 123456789,
+  "dad phone": 9876543210
+}
