@@ -18,17 +18,9 @@ document.getElementById("input").addEventListener("keypress",
   {
 	 if (e.keyCode == 13)
 	 {
-		 var input = document.getElementById("input");
-		 var found = false;
-		 for(i=0; i<tagOptions.length; i++)
-		 {
-			 if(tagOptions[i] == input.value)
-			 {
-				 found = true;
-				 break;
-			 }
-	 	}
-		if (found == true)
+		var input = document.getElementById("input");
+		var found = $.inArray(input.value, tagOptions);
+		if (found)
 		{
 			var copyIndex = input.value.indexOf("Copy:");
 			var deleteIndex = input.value.indexOf("Delete:");
@@ -51,7 +43,7 @@ document.getElementById("input").addEventListener("keypress",
 				input.value = "";
 			}
 		}
-		else if (found == false)
+		else
 	 	{
 			//TODO: Add a settings option for users to set their own delimiters
 			delimIndex = input.value.indexOf(":");
@@ -81,8 +73,12 @@ document.getElementById("input").addEventListener("keypress",
 
   $(function() {
     $( "#input" ).autocomplete({
-      source: tagOptions,
-      autoFocus: true
+      autoFocus: true,
+      source: tagOptions
+     // source: function(req, responseFn){
+        //req.term; 
+        //responseFn();
+     // }
     });
   });
 
