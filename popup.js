@@ -4,6 +4,10 @@ var tags = [
       "hw",
       "omg",
     ];
+var tag_texts = [
+      "hw:Hello World",
+      "omg:Oh My God",
+    ];
 var tagOptions = [
       "Copy: hw:Hello World",
       "Delete: hw:Hello World",
@@ -20,6 +24,8 @@ document.getElementById("input").addEventListener("keypress",
 	 {
 		var input = document.getElementById("input");
 		var found = $.inArray(input.value, tagOptions);
+		var tag_found = $.inArray(input.value, tag_texts);
+		alert("found="+String(found)+"\ntag_found="+String(tag_found));
 		if(found >=0)
 		{
 			var copyIndex = input.value.indexOf("Copy:");
@@ -43,7 +49,7 @@ document.getElementById("input").addEventListener("keypress",
 				input.value = "";
 			}
 		}
-		else
+		else if (tag_found < 0)
 	 	{
 			//TODO: Add a settings option for users to set their own delimiters
 			delimIndex = input.value.indexOf(":");
@@ -60,7 +66,7 @@ document.getElementById("input").addEventListener("keypress",
 				tagOptions[tagOptions.length] = "Delete: " + input.value;
 				input.value = "";
 			}
-	 	}
+		}
 		return false;
 	 }
 	 else
@@ -77,6 +83,7 @@ document.getElementById("input").addEventListener("keypress",
       source: tagOptions
      // source: function(req, responseFn){
         //req.term; 
+      	// search req.term in tag_texts and if found display corresponding tagOptions
         //responseFn();
      // }
     });
