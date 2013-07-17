@@ -1,9 +1,4 @@
-window.onload = function() {
-
-$(document).ready(function(){
-
-$("#input").focus(function(){
-
+document.addEventListener('DOMContentLoaded', function () {
 
 var tags = [
       "hw",
@@ -83,15 +78,12 @@ document.getElementById("input").addEventListener("keypress",
   }
 );
 
+
   $(function() {
     $( "#input" ).autocomplete({
       source: tagOptions,
       autoFocus: true
     });
   });
-});
 
 });
-
-};
-
