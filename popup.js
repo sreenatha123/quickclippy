@@ -20,7 +20,7 @@ document.getElementById("input").addEventListener("keypress",
 	 {
 		var input = document.getElementById("input");
 		var found = $.inArray(input.value, tagOptions);
-		if (found)
+		if(found >=0)
 		{
 			var copyIndex = input.value.indexOf("Copy:");
 			var deleteIndex = input.value.indexOf("Delete:");
