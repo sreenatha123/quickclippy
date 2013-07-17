@@ -25,16 +25,17 @@ document.getElementById("input").addEventListener("keypress",
 		var input = document.getElementById("input");
 		var found = $.inArray(input.value, tagOptions);
 		var tag_found = $.inArray(input.value, tag_texts);
-		alert("found="+String(found)+"\ntag_found="+String(tag_found));
 		if(found >=0)
 		{
 			var copyIndex = input.value.indexOf("Copy:");
 			var deleteIndex = input.value.indexOf("Delete:");
 			if (copyIndex == 0)
 			{
-				//TODO: Copy to clipboard
-				var copy = input.value.substr(copyIndex+6,input.value.length);
-				input.value = copy;
+				var tag_text = input.value.substr(copyIndex+6,input.value.length);
+				var tag_index = tagOptions.indexOf(input.value)/2;
+				var text = tag_text.substr(tags[tag_index].length+1, tag_text.length);
+				input.value = text;
+				//TODO: Copy text to clipboard
 			}
 			if (deleteIndex == 0)
 			{
@@ -62,6 +63,7 @@ document.getElementById("input").addEventListener("keypress",
 			{
 				//Add everything before delimiter to tags array
 				tags[tags.length] = input.value.substr(0, delimIndex);
+				tag_texts[tag_texts.length] = input.value;
 				tagOptions[tagOptions.length] = "Copy: " + input.value;
 				tagOptions[tagOptions.length] = "Delete: " + input.value;
 				input.value = "";
