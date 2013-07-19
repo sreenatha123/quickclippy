@@ -2,12 +2,28 @@
   "manifest_version": 2,
 
   "name": "QuickClippy",
-  "description": "Provides a quick, searchable, indexed clipboard",
+  "description": "Provides a quick way to put pre-defined strings into clipboard.",
   "version": "1.0",
 
   "browser_action": {
     "default_icon": "redSkull.png",
     "default_popup": "popup.html"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "commands": {
+  	// won't work until some time
+    "_execute_browser_action": {
+        "suggested_key": {
+            "windows": "Ctrl+Shift+K",
+            "mac": "Command+Shift+K",
+            "chromeos": "Ctrl+Shift+K",
+            "linux": "Ctrl+Shift+K"
+        }
+    }
   }
 
 }

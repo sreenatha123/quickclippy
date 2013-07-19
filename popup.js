@@ -1,94 +1,93 @@
-document.addEventListener('DOMContentLoaded', function () {
+// check jQuery
+if (typeof (jQuery) === 'undefined') {
+  throw 'jQuery not included.';
+}
+// need fuzzyset.js - https://github.com/Glench/fuzzyset.js
+if (typeof (FuzzySet) === 'undefined') {
+  throw 'FuzzySet please.';
+}
 
-var tags = [
-      "hw",
-      "omg",
-    ];
-var tag_texts = [
-      "hw:Hello World",
-      "omg:Oh My God",
-    ];
-var tagOptions = [
-      "Copy: hw:Hello World",
-      "Delete: hw:Hello World",
-      "Copy: omg:Oh My God",
-      "Delete: omg:Oh My God"
-    ];
-  
-  //TODO : "Copy" and "Delete" strings should be ignored by autocomplete
+// our fuzzy instance
+var fuzzy_instance = FuzzySet(false);
 
-document.getElementById("input").addEventListener("keypress", 
-  function (e)
-  {
-	 if (e.keyCode == 13)
-	 {
-		var input = document.getElementById("input");
-		var found = $.inArray(input.value, tagOptions);
-		var tag_found = $.inArray(input.value, tag_texts);
-		if(found >=0)
-		{
-			var copyIndex = input.value.indexOf("Copy:");
-			var deleteIndex = input.value.indexOf("Delete:");
-			if (copyIndex == 0)
-			{
-				var tag_text = input.value.substr(copyIndex+6,input.value.length);
-				var tag_index = tagOptions.indexOf(input.value)/2;
-				var text = tag_text.substr(tags[tag_index].length+1, tag_text.length);
-				input.value = text;
-				//TODO: Copy text to clipboard
-			}
-			if (deleteIndex == 0)
-			{
-				tagOptionsIndex = tagOptions.indexOf(input.value);
-				tagIndex = tagOptionsIndex / 2;
-				//TODO: Find an efficient(memory, speed) delete method
-			 	//Delete entry from tags
-				tags[tagIndex] = "";
-			 	//Delete entry's options from tagOptions
-				tagOptions[tagOptionsIndex - 1] = ""; // Copy: option
-				tagOptions[tagOptionsIndex] = ""; // Delete: option
-				input.value = "";
-			}
-		}
-		else if (tag_found < 0)
-	 	{
-			//TODO: Add a settings option for users to set their own delimiters
-			delimIndex = input.value.indexOf(":");
-			if(delimIndex == -1)
-			{
-				// Incorrect assignment syntax
-				// Do nothing
-			}
-			else
-			{
-				//Add everything before delimiter to tags array
-				tags[tags.length] = input.value.substr(0, delimIndex);
-				tag_texts[tag_texts.length] = input.value;
-				tagOptions[tagOptions.length] = "Copy: " + input.value;
-				tagOptions[tagOptions.length] = "Delete: " + input.value;
-				input.value = "";
-			}
-		}
-		return false;
-	 }
-	 else
-	 {
-		 return true;
-	 }
-  }
-);
+// our data
+var data;
+data = {
+  'hello-world':"Hello World",
+  'gp-gmail':"gprasanth.1992@gmail.com",
+  'omg':"Oh My God!?"
+};
 
+var tags = $.map(data, function(value, key) { return key; });
 
-  $(function() {
-    $( "#input" ).autocomplete({
-      autoFocus: true,
-      source: tagOptions
-     // source: function(req, responseFn){
-        //req.term; 
-      	// search req.term in tag_texts and if found display corresponding tagOptions
-        //responseFn();
-     // }
-    });
+for (var key in tags) {
+  var str = tags[key];
+  fuzzy_instance.add(str);
+}
+$("#input").focus();
+
+$(function () {
+  $("#input").focus();
+  $("#input").autocomplete({
+    autoFocus: true,
+    source: function (req, responseFn) {
+      var str = req.term;
+      var fuzzy_matches = fuzzy_instance.get(str);
+      var resp = [];
+      for (var fuzzy_match in fuzzy_matches) {
+        var relv = fuzzy_matches[fuzzy_match][0];
+        if (relv < 0.1) {
+          if ($.inArray(str, tags) === -1) {
+            resp.push('Add: '+str);
+          }
+        }
+        resp.push('Copy: '+fuzzy_matches[fuzzy_match][1]);
+        resp.push('Delete: '+fuzzy_matches[fuzzy_match][1]);
+        if (relv > 0.1) {
+          resp.push('Add: '+str);
+        }
+      }
+      if (resp.length === 0) {
+        resp = ['Add: '+str];
+      }
+      responseFn(resp);
+    },
+    select: function (event, ui) {
+      var str = ui.item.value;
+      var tag = "";
+      if (str.indexOf('Copy: ') === 0) {
+        var str2copy = "";
+        tag = str.replace(/^Copy: /g, '');
+        if ($.inArray(tag, tags) >= 0) {
+          str2copy = data[tag];
+        } else {
+          $(this).val('');
+        }
+        // copy str to clipboard
+        if (str2copy !== "") {
+          $(this).val('Copied!');
+        }
+      } else if (str.indexOf('Delete: ') === 0) {
+        tag = str.replace(/^Delete: /g, '');
+        if ($.inArray(tag, tags) >= 0) {
+          delete data.tag;
+        } else {
+          $(this).val('');
+        }
+        if (typeof(data.tag) === 'undefined') {
+          $(this).val('Deleted!');
+        }
+      } else if (str.indexOf('Add: ') === 0) {
+        tag = str.replace(/^Add: /g, '');
+        data.tag = prompt('Type the text you want to associate with '+tag);
+        // chrome.storageArea.set({"data": data});
+        fuzzy_instance.add(tag);
+        if (typeof(data.tag) != 'undefined') {
+          $(this).val('Added!');
+        }
+      }
+      event.preventDefault();
+      setTimeout(function(){ window.close(); }, 100);
+    }
   });
-
 });
